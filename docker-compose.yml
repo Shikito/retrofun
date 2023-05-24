@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: changethis!
+    ports:
+      - "5435:5432"
+    volumes:
+    - ./db_data:/var/lib/postgresql/data
+  admin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: changethis!
+    ports:
+      - 8033:80
+    volumes:
+      - ./admin_data:/var/lib/pgadmin
+  py11:
+    container_name: py11
+    build:
+      context: .
+      dockerfile: ./docker/py11/Dockerfile
+    restart: always
+    volumes:
+      - ./py11:/py11
+    stdin_open: true
+    tty: true
+    ports:
+      - "8032:8032"
